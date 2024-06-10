@@ -1,0 +1,9 @@
+apiVersion: aws.example.org/v1alpha1
+kind: XS3
+metadata:
+  name: {{ .Values.bucketName }}
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  bucketName: {{ .Values.bucketName }}
+  region: {{ .Values.region }}

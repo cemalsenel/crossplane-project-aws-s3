@@ -1,0 +1,11 @@
+apiVersion: v2
+name: s3-chart
+description: A Helm chart for deploying an S3 bucket using Crossplane
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+keywords:
+  - crossplane
+  - aws
+  - s3

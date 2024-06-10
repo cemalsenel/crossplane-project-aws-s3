@@ -1,0 +1,31 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xs3s.aws.example.org
+  annotations: 
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  group: aws.example.org
+  names:
+    kind: XS3
+    plural: xs3s
+  claimNames:
+    kind: S3
+    plural: s3s
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          description: crossplane-s3
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                bucketName:
+                  type: string
+                region:
+                  type: string
+

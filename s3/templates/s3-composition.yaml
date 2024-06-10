@@ -1,0 +1,58 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xs3s
+  labels:
+    crossplane.io/xrd: xs3s.aws.example.org
+  annotations: 
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  compositeTypeRef:
+    apiVersion: aws.example.org/v1alpha1
+    kind: XS3
+  resources:
+    - name: s3bucket
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: Bucket
+        metadata:
+          name: {{ .Values.bucketName }}
+        spec:
+          forProvider:
+            objectLockEnabled: true
+            region: {{ .Values.region }}
+            tags:
+              Name: "example"
+
+
+    - name: s3bucketVersioning
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketVersioning
+        metadata:
+          annotations:
+            meta.upbound.io/example-id: s3/v1beta1/bucketversioning
+          labels:
+            testing.upbound.io/example-name: versioning_example
+          name: versioning-example
+        spec:
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+            region: {{ .Values.region }}
+            versioningConfiguration:
+              - status: Enabled
+
+    - name: s3bucketOwnership
+      base:
+        apiVersion: s3.aws.upbound.io/v1beta1
+        kind: BucketOwnershipControls
+        metadata:
+          name: example
+        spec:
+          forProvider:
+            bucketSelector:
+              matchControllerRef: true
+            region: {{ .Values.region }}
+            rule:
+              - objectOwnership: ObjectWriter 
